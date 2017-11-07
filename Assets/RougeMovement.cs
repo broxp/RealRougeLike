@@ -10,6 +10,8 @@ public class RougeMovement : MonoBehaviour {
 	Vector3 lastDir = new Vector3(1, 0, 0);
 	Vector3 lastDir2 = new Vector3(1, 0, 0);
 	Vector3 lastOrientation = new Vector3(1, 0, 0);
+
+	Vector3 forward;
 	GameObject[] arr = new GameObject[10];
 	int arrInd = 0;
 	void Start() {
@@ -19,7 +21,8 @@ public class RougeMovement : MonoBehaviour {
 	void Update () {
 		var h = Input.GetAxis("Horizontal");
 		var v = Input.GetAxis("Vertical");
-		var forward = new Vector3(h, 0, v);
+		forward = new Vector3(h, 0, v);
+		print(forward);
 		var orientation = new Vector3(h, v, 0);
 		if(forward != Vector3.zero) {
 			lastDir = forward;
@@ -37,9 +40,6 @@ public class RougeMovement : MonoBehaviour {
 		transform.rotation = rotation;
 		//transform.position += deltaPos;
 
-		if(forward != Vector3.zero) {
-			rigidBody.AddForce(speed * forward);
-		}
 
 		if(isJump) {
 			var old = arr[arrInd];
@@ -51,6 +51,11 @@ public class RougeMovement : MonoBehaviour {
 			arr[arrInd] = (GameObject) Instantiate(target.gameObject, spawnPos, target.rotation);
 			arr[arrInd].GetComponent<VanishBehaviour>().active = true;
 			arrInd = (arrInd + 1) % arr.Length;
+		}
+	}
+	void FixedUpdate() {
+		if(forward != Vector3.zero) {
+			rigidBody.AddForce(speed * forward);
 		}
 	}
 }
